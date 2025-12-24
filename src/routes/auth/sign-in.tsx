@@ -1,37 +1,32 @@
-import { loginFn } from '@/features/auth/lib/auth'
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import SignInForm from '@/features/auth/ui/sign-in-form'
 
 export const Route = createFileRoute('/auth/sign-in')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const [email, setEmail] = useState('')
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    await loginFn({ data: { email } })
-  }
-
   return (
-    <form
-      className="flex flex-col gap-4 max-w-md border p-3 mx-auto"
-      onSubmit={handleSubmit}
-    >
-      <label htmlFor="email">Email Id:</label>
-      <input
-        type="text"
-        id="email"
-        name="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border border-black p-1"
-      />
-      <button type="submit" className="border border-black rounded">
-        Sign In
-      </button>
-    </form>
+    <main className="min-h-screen flex-center">
+      <Card className="w-full sm:max-w-md">
+        <CardHeader>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>
+            Sign in to using your email id or google account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignInForm />
+        </CardContent>
+      </Card>
+    </main>
   )
 }
