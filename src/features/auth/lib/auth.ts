@@ -11,7 +11,7 @@ export const getUserFn = createServerFn().handler(async () => {
   return user
 })
 
-export const loginFn = createServerFn()
+export const signUp = createServerFn()
   .inputValidator(
     z.object({
       email: z.email(),
@@ -23,7 +23,7 @@ export const loginFn = createServerFn()
       email: data.email,
       options: {
         emailRedirectTo: process.env.APP_BASE_URL,
-        shouldCreateUser: true,
+        shouldCreateUser: false,
       },
     })
     if (error) throw new ServerError(error.message, error.code, error.status)

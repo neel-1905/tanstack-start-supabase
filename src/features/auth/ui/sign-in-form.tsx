@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { appToast } from '@/lib/toast.utils'
 import { handleServerError } from '@/lib/error/handle-server-error'
-import { loginFn } from '@/features/auth/lib/auth'
+import { signUp } from '@/features/auth/lib/auth'
 import Button from '@/components/ui/button/button'
 
 const formSchema = z.object({
@@ -25,7 +25,7 @@ function SignInForm() {
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await loginFn({ data: { email: values.email } })
+      await signUp({ data: { email: values.email } })
       appToast.success({
         title: `Login link sent to ${values.email}`,
       })
