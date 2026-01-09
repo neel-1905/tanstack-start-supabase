@@ -1,5 +1,6 @@
 import { getUserFn, logoutFn } from '@/features/auth/lib/auth'
-import { createFileRoute } from '@tanstack/react-router'
+import { handleServerError } from '@/lib/error/handle-server-error'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_app/_authed/')({
   component: App,
@@ -12,13 +13,20 @@ export const Route = createFileRoute('/_app/_authed/')({
 
 function App() {
   const user = Route.useRouteContext()
+  const router = useRouter()
+
   const handleLogout = async () => {
-    await logoutFn()
+    try {
+      await logoutFn()
+      router.navigate({ to: '/auth/sign-in' })
+    } catch (error) {
+      handleServerError(error)
+    }
   }
 
   return (
     <div>
-      <span>{user.email}</span>
+      <span className="text-primary">{user.email}</span>
 
       <button onClick={handleLogout}>Logout</button>
     </div>

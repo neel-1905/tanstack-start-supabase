@@ -7,6 +7,9 @@ import {
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { getThemeServerFn } from '@/lib/theme'
+import { ThemeProvider } from '@/components/providers/theme-provider'
+import { Toaster } from '@/components/ui/sonner'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -23,7 +26,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Expense Tracker',
       },
     ],
     links: [
@@ -35,16 +38,21 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   }),
 
   shellComponent: RootDocument,
+  loader: () => getThemeServerFn(),
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const theme = Route.useLoaderData()
   return (
-    <html lang="en">
+    <html className={theme} lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        {children}
+        <ThemeProvider theme={theme}>
+          {children}
+          <Toaster position="top-right" richColors closeButton />
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

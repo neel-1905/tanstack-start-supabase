@@ -1,7 +1,8 @@
 import { getSupabaseServerClient } from '@/lib/supabase/server'
 import { createServerFn } from '@tanstack/react-start'
-import { redirect } from '@tanstack/react-router'
+
 import { z } from 'zod'
+import { ServerError } from '@/lib/error/server-error'
 
 export const getUserFn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient()
@@ -10,7 +11,7 @@ export const getUserFn = createServerFn().handler(async () => {
   return user
 })
 
-export const loginFn = createServerFn()
+export const signUp = createServerFn()
   .inputValidator(
     z.object({
       email: z.email(),
@@ -22,10 +23,11 @@ export const loginFn = createServerFn()
       email: data.email,
       options: {
         emailRedirectTo: process.env.APP_BASE_URL,
-        shouldCreateUser: true,
+        shouldCreateUser: false,
       },
     })
-    if (error) throw new Error(error.message)
+    if (error) throw new ServerError(error.message, error.code, error.status)
+
     return user
   })
 
@@ -49,6 +51,8 @@ export const verifyLogin = createServerFn()
 export const logoutFn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient()
   const { error } = await supabase.auth.signOut()
-  if (error) throw new Error(error.message)
-  else throw redirect({ to: '/auth/sign-in' })
+
+  if (error) throw new ServerError(error.message, error.code, error.status)
+
+  return { success: true }
 })
